@@ -1,0 +1,101 @@
+[PROCEDURE]
+NAME IspisPromjena
+CATEGORY 'Report'
+[COMMON]
+DESCRIPTION 'Report the Stavka_promjene File'
+FROM ABC Report
+[DATA]
+[FILES]
+[PRIMARY]
+Stavka_promjene
+[INSTANCE]
+0
+[KEY]
+Sta:PK_Stavka_promjene
+[PROMPTS]
+%EnablePrintPreview LONG  (1)
+%MaximizePreviewWindow LONG  (1)
+%InitialZoom DEFAULT  ('No Zoom')
+%ButtonAction DEPEND %Control STRING TIMES 0
+
+%ButtonRunName DEPEND %Control STRING TIMES 0
+
+%ButtonRunParameters DEPEND %Control STRING TIMES 0
+
+%ButtonProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ButtonThread DEPEND %Control LONG TIMES 0
+
+%ButtonThreadStack DEPEND %Control @n7 TIMES 0
+
+%ButtonParameters DEPEND %Control STRING TIMES 0
+
+%ButtonRequest DEPEND %Control STRING TIMES 0
+
+%PreLookupKey DEPEND %Control KEY TIMES 0
+
+%PreLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PreLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%PostLookupKey DEPEND %Control KEY TIMES 0
+
+%PostLookupField DEPEND %Control COMPONENT TIMES 0
+
+%PostLookupProcedure DEPEND %Control PROCEDURE TIMES 0
+
+%ForceWindowRefresh DEPEND %Control LONG TIMES 0
+[ADDITION]
+NAME ABC ReportDateStamp
+[INSTANCE]
+INSTANCE 1
+[PROMPTS]
+%TimeStampFormat DEFAULT  ('@D17')
+%UseSystemTime DEFAULT  (1)
+[ADDITION]
+NAME ABC ReportTimeStamp
+[INSTANCE]
+INSTANCE 2
+[PROMPTS]
+%DateStampFormat DEFAULT  ('@T7')
+%UseSystemDate DEFAULT  (1)
+[WINDOW]
+ProgressWindow WINDOW('Report Stavka_promjene'),|
+       AT(,,142,59),TIMER(1),GRAY,DOUBLE,FONT('MS Sans Serif',8,,400,1),CENTER
+       PROGRESS,USE(Progress:Thermometer),AT(15,15,111,12),RANGE(0,100),#ORIG(Progress:Thermometer)
+       STRING(''),AT(0,3,141,10),USE(?Progress:UserString),CENTER,#ORIG(?Progress:UserString)
+       STRING(''),AT(0,30,141,10),USE(?Progress:PctText),CENTER,#ORIG(?Progress:PctText)
+       BUTTON('Cancel'),AT(46,42,49,15),USE(?Progress:Cancel),ICON('WACANCEL.ICO'),FLAT,MSG('Cancel Report'),TIP('Cancel Report'),LEFT,#ORIG(?Progress:Cancel)
+     END
+[REPORT]
+Report REPORT('Stavka_promjene Report'),AT(250,850,8000,9650),PRE(RPT),PAPER(PAPER:LETTER),FONT('MS Sans Serif',8,,400,1),THOUS
+       HEADER,AT(250,250,8000,600),USE(?Header),FONT('MS Sans Serif',8,,400,1)
+         STRING('Report Stavka_promjene file'),AT(0,20,8000,220),USE(?ReportTitle),CENTER,FONT('MS Sans Serif',8,,400,1)
+         BOX,AT(0,350,8000,250),COLOR(00H),USE(?HeaderBox)
+         LINE,AT(2666,350,0,250),COLOR(00H),USE(?HeaderLine:1)
+         LINE,AT(5332,350,0,250),COLOR(00H),USE(?HeaderLine:2)
+         STRING('Sif promjene'),AT(50,390,2566,170),TRN,USE(?HeaderTitle:1)
+         STRING('Sif predmeta o'),AT(2716,390,2566,170),TRN,USE(?HeaderTitle:2)
+         STRING('Sif predmeta p'),AT(5382,390,2566,170),TRN,USE(?HeaderTitle:3)
+       END
+Detail DETAIL,AT(0,0,8000,250),USE(?Detail)
+         LINE,AT(0,0,0,250),COLOR(00H),USE(?DetailLine:0)
+         LINE,AT(2666,0,0,250),COLOR(00H),USE(?DetailLine:1)
+         LINE,AT(5332,0,0,250),COLOR(00H),USE(?DetailLine:2)
+         LINE,AT(8000,0,0,250),COLOR(00H),USE(?DetailLine:3)
+         STRING(@n-14),USE(Sta:Sif_promjene),RIGHT,AT(50,50,2566,170)
+         STRING(@n-14),USE(Sta:Sif_predmeta_o),RIGHT,AT(2716,50,2566,170)
+         STRING(@n-14),USE(Sta:Sif_predmeta_p),RIGHT,AT(5382,50,2566,170)
+         LINE,AT(0,250,8000,0),COLOR(00H),USE(?DetailEndLine)
+       END
+       FOOTER,AT(250,10500,8000,250),USE(?Footer)
+         STRING('Date:'),AT(115,52,344,135),USE(?ReportDatePrompt:2),TRN,FONT('Arial',8,,FONT:regular),#SEQ(1),#ORIG(?ReportDatePrompt)
+         STRING('<<-- Date Stamp -->'),AT(490,52,927,135),USE(?ReportDateStamp:2),TRN,FONT('Arial',8,,FONT:regular),#SEQ(1),#ORIG(?ReportDateStamp)
+         STRING('Time:'),AT(1625,52,271,135),USE(?ReportTimePrompt:2),TRN,FONT('Arial',8,,FONT:regular),#SEQ(2),#ORIG(?ReportTimePrompt)
+         STRING('<<-- Time Stamp -->'),AT(1927,52,927,135),USE(?ReportTimeStamp:2),TRN,FONT('Arial',8,,FONT:regular),#SEQ(2),#ORIG(?ReportTimeStamp)
+         STRING(@pPage <<#p),AT(6950,52,700,135),FONT('Arial',8,,FONT:regular),PAGENO,USE(?PageCount:2)
+       END
+       FORM,AT(250,250,8000,10500),USE(?Form),FONT('MS Sans Serif',8,,400,1)
+         IMAGE(''),AT(0,0,8000,10500),USE(?FormImage),TILED
+       END
+     END
